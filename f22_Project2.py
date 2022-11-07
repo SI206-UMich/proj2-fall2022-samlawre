@@ -25,7 +25,47 @@ def get_listings_from_search_results(html_file):
         ('Loft in Mission District', 210, '1944564'),  # example
     ]
     """
-    pass
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    fullpath = os.path.join(base_path, 'search_results.html')
+    file = open(fullpath)
+    f = file.read()
+    file.close()
+    soup = BeautifulSoup(f, 'html.parser')
+    print(soup)
+    titles = soup.find_all('div', class_= 't1jojoys dir dir-ltr')
+    # print(titles)
+    title_lst=[]
+    # pattern=r'\>(.+)\<'
+    for title in titles:
+        title_lst.append(title.text.strip())
+        # if re.search(pattern, new):
+        #      title_lst.append(new)
+    # print(title_lst)
+    print(title_lst)
+    cost_lst=[]
+    costs= soup.find_all('span', class_="_tyxjp1")
+    
+    for cost in costs:
+        cost_lst.append(int(cost.text.strip()))
+    print(cost_lst)
+
+    ids=soup.find_all('div',class_="t1jojoys dir dir-ltr")
+    # print(id)
+    id_lst=[]
+    # id_num=id.find_all('id')
+
+    for id in ids:
+        id_num=id.find('id')
+        id_lst.append(id_num.text.strip())
+    print(id_lst)
+    # print(id_num)
+    
+
+    # final_list=[]
+    # for idx in range(len(title_lst)):
+    #     final_list.append((title_lst[idx], cost_lst[idx], id_lst[idx]))
+
+    # return final_list 
 
 
 def get_listing_information(listing_id):
@@ -52,8 +92,18 @@ def get_listing_information(listing_id):
         number of bedrooms
     )
     """
-    pass
+    source_directory = os.path.dirname(__file__)
+    fullpath = os.path.join(source_directory, listing_id)
+    file = open(fullpath)
+    f = file.read()
+    file.close()
+    soup = BeautifulSoup(f, 'html.parser')
 
+    policy= soup.find('span', class_='ll4r2nl dir dir-ltr')
+    policy=policy.text.strip()
+
+    place_type=soup.find('div', class_="_1jlr81g")
+    print(place_type)
 
 def get_detailed_listing_database(html_file):
     """
@@ -69,7 +119,19 @@ def get_detailed_listing_database(html_file):
         ...
     ]
     """
-    pass
+    lst=[]
+    list_tups=get_listings_from_search_results(html_file)
+    for tup in list_tups:
+        listing_id=tup[2]
+        listing_title=tup[0]
+        listing_cost=tup[1]
+    
+        listing_information=get_listing_information(listing_id)
+        policy_num=listing_information[0]
+        placetype=listing_information[1]
+        bedrooms=listing_information[2]
+        lst.append((listing_title, listing_cost, listing_id, policy_num, placetype, bedrooms))
+    return lst
 
 
 def write_csv(data, filename):
@@ -94,8 +156,15 @@ def write_csv(data, filename):
 
     This function should not return anything.
     """
-    pass
-
+    header=["Listing Title","Cost","Listing ID","Policy Number","Place Type","Number of Bedrooms"]
+    sorted_data=sorted(data, key=lambda x:x[1])
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    fullpath = os.path.join(base_path, filename)
+    with open(fullpath, 'w', newline="") as f:
+        writer=csv.writer(f, delimiter=",")
+        writer.writerow(header)
+        for tup in sorted_data:
+            writer.writerow(tup)
 
 def check_policy_numbers(data):
     """
@@ -116,8 +185,15 @@ def check_policy_numbers(data):
     ]
 
     """
-    pass
-
+    tups_checked=[]
+    for tup in data:
+        policy_num=tup[3]
+        reg_ex= r'(20\d{2}\-00\d{4}STR)|(STR-000\d{4})'
+        results=re.search(reg_ex, tup)
+        if policy_num not in results:
+            tups_checked.append(tup)
+    return tups_checked
+    
 
 def extra_credit(listing_id):
     """
