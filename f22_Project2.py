@@ -26,7 +26,7 @@ def get_listings_from_search_results(html_file):
     ]
     """
     base_path = os.path.abspath(os.path.dirname(__file__))
-    fullpath = os.path.join(base_path, '/Users/samlawrence/Desktop/SI206/proj2-fall2022-samlawre/html_files/mission_district_search_results.html')
+    fullpath = os.path.join(base_path, 'html_files/mission_district_search_results.html')
     file = open(fullpath)
     f = file.read()
     file.close()
@@ -49,16 +49,17 @@ def get_listings_from_search_results(html_file):
     id_lst=[]
 
     for id in ids:
-        id_num=id.find('id')
-        id_lst.append(id_num.text.strip())
-    print(id_lst)
-    # print(id_num)
+        id_num=id.get('id')
+        results=id_num.strip()
+        nums=results.split('_')
+        id_lst.append(nums[-1])
+    # print(id_lst)
     
 
     final_list=[]
     for idx in range(len(title_lst)):
         final_list.append((title_lst[idx], cost_lst[idx], id_lst[idx]))
-
+    # print(final_list)
     return final_list 
 
 
@@ -86,8 +87,8 @@ def get_listing_information(listing_id):
         number of bedrooms
     )
     """
-    source_directory = os.path.dirname(__file__)
-    fullpath = os.path.join(source_directory, listing_id)
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    fullpath = os.path.join(base_path, 'html_files/'+listing_id)
     file = open(fullpath)
     f = file.read()
     file.close()
