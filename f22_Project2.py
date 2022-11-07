@@ -45,7 +45,6 @@ def get_listings_from_search_results(html_file):
     # print(cost_lst)
 
     ids=soup.find_all('div',class_="t1jojoys dir dir-ltr")
-    # print(ids)
     id_lst=[]
 
     for id in ids:
@@ -88,17 +87,42 @@ def get_listing_information(listing_id):
     )
     """
     base_path = os.path.abspath(os.path.dirname(__file__))
-    fullpath = os.path.join(base_path, 'html_files/'+listing_id)
+    fullpath = os.path.join(base_path, 'html_files/listing_'+listing_id+'.html')
     file = open(fullpath)
     f = file.read()
     file.close()
     soup = BeautifulSoup(f, 'html.parser')
 
-    policy= soup.find('span', class_='ll4r2nl dir dir-ltr')
-    policy=policy.text.strip()
+    policy_new=[]
+    policy_num= soup.find('li', class_= "f19phm7j dir dir-ltr")
+    policy= policy_num.find('span', class_='ll4r2nl dir dir-ltr')
+    policy_new.append(policy.text)
+    print(policy_new)
+   
+    place=[]
+    place_type=soup.find('div', class_="_cv5qq4")
+    lower_place=place_type.text.lower()
+    if "private" in lower_place:
+        place.append("Private Room")
+    elif "shared" in lower_place:
+        place.append("Shared Room")
+    else:
+        place.append("Entire Room")
 
-    place_type=soup.find('div', class_="_1jlr81g")
-    print(place_type)
+    print(place)
+
+    bedrooms=[]
+    beds=soup.find('span', class_="s1b4clln dir dir-ltr")
+    print(beds)
+    # bed_nums=soup.find(span)
+#fix this function
+
+    # final_list=[]
+    # for idx in range(len(policy_new)):
+    #     final_list.append((policy_new[idx], place[idx], bedrooms[idx]))
+    # # print(final_list)
+    # return final_list
+
 
 def get_detailed_listing_database(html_file):
     """
