@@ -26,33 +26,27 @@ def get_listings_from_search_results(html_file):
     ]
     """
     base_path = os.path.abspath(os.path.dirname(__file__))
-    fullpath = os.path.join(base_path, 'search_results.html')
+    fullpath = os.path.join(base_path, '/Users/samlawrence/Desktop/SI206/proj2-fall2022-samlawre/html_files/mission_district_search_results.html')
     file = open(fullpath)
     f = file.read()
     file.close()
     soup = BeautifulSoup(f, 'html.parser')
-    print(soup)
     titles = soup.find_all('div', class_= 't1jojoys dir dir-ltr')
-    # print(titles)
+
     title_lst=[]
-    # pattern=r'\>(.+)\<'
     for title in titles:
         title_lst.append(title.text.strip())
-        # if re.search(pattern, new):
-        #      title_lst.append(new)
     # print(title_lst)
-    print(title_lst)
     cost_lst=[]
     costs= soup.find_all('span', class_="_tyxjp1")
     
     for cost in costs:
-        cost_lst.append(int(cost.text.strip()))
-    print(cost_lst)
+        cost_lst.append(int(cost.text.strip('$')))
+    # print(cost_lst)
 
     ids=soup.find_all('div',class_="t1jojoys dir dir-ltr")
-    # print(id)
+    # print(ids)
     id_lst=[]
-    # id_num=id.find_all('id')
 
     for id in ids:
         id_num=id.find('id')
@@ -61,11 +55,11 @@ def get_listings_from_search_results(html_file):
     # print(id_num)
     
 
-    # final_list=[]
-    # for idx in range(len(title_lst)):
-    #     final_list.append((title_lst[idx], cost_lst[idx], id_lst[idx]))
+    final_list=[]
+    for idx in range(len(title_lst)):
+        final_list.append((title_lst[idx], cost_lst[idx], id_lst[idx]))
 
-    # return final_list 
+    return final_list 
 
 
 def get_listing_information(listing_id):
