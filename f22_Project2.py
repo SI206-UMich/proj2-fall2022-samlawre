@@ -111,10 +111,26 @@ def get_listing_information(listing_id):
 
     print(place)
 
-    bedrooms=[]
+    bedrooms=0
+    # beds=soup.find('li', class_="l7n4lsf dir dir-ltr")
+
     beds=soup.find('span', class_="s1b4clln dir dir-ltr")
-    print(beds)
+    print(beds) #not right
+    bed_info=beds[1].text.split()
+    if bed_info[1]=='Studio':
+        bedrooms=1
+    else:
+        bedrooms=int(bed_info[1])
+    print(bedrooms)
+
+
+    # pattern=r'\d+?\sbed?\w+'
+    # beds=soup.find(re.compile(pattern))
+    # if re.search(pattern, beds):
+    #     bedrooms.append(beds)
+    print(bedrooms)
     # bed_nums=soup.find(span)
+    # print(bedrooms)
 #fix this function
 
     # final_list=[]
