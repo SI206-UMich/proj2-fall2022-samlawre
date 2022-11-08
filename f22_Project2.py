@@ -114,58 +114,13 @@ def get_listing_information(listing_id):
     beds=soup.find_all("li", class_="l7n4lsf dir dir-ltr")[1]
     span=beds.find_all('span')[2]
     for number in span:
-        # print(number)
-        bed_number.append(int(number[0]))
+        if number[0]=="S":
+            bed_number.append(1)
+        else:
+            bed_number.append(int(number[0]))
     # print(bed_number)
     # print(span)
-    # num_bedrooms=0
-    # beds=soup.find_all('ol', class_="lgx66tx dir dir-ltr")
-    # bed_info=beds.text
-    # updates=re.findall("\. (\S bedroom|studio|Studio)", bed_info)
-    # for info in updates:
-    #     if info[0]=="S":
-    #         num_bedrooms=1
-    #     else:
-    #         num_bedrooms=int(info[0])
-    # span=beds.find_all('span', beds)
-    # print(num_bedrooms)
-    # for nums in beds:
 
-    #         bedrooms.append(nums)
-    # print(bedrooms)
-    # print(bedrooms)
-    # # nums=beds.find('li', class_="pen26si dir dir-ltr")
-    # for items in beds:
-    #     items.text
-    #     print(items)
-    
-    # for items in beds:
-    #     pattern=r'(\d+?) bedroom'
-    #     x=re.search(pattern, items)
-    #     if x in items:
-    #         bedrooms.append(x)
-    # print(beds)
-   #previous version------------------------------------------
-    # beds=soup.find('span', class_="s1b4clln dir dir-ltr")
-    # print(beds) #not right
-    # bed_info=beds[1].text.split()
-    # if bed_info[1]=='Studio':
-    #     bedrooms=1
-    # else:
-    #     bedrooms=int(bed_info[1])
-    # print(bedrooms)
-    #---------------------------------------------------------
-
-    # pattern=r'\d+?\sbed?\w+'
-    # beds=soup.find(re.compile(pattern))
-    # if re.search(pattern, beds):
-    #     bedrooms.append(beds)
-    # print(bedrooms)
-    # bed_nums=soup.find(span)
-    # print(bedrooms)
-#fix this function
-
-    # final_list=(policy_new, place, bed_number)
     for idx in range(len(policy_new)):
         final_list=((policy_new[idx], place[idx], bed_number[idx]))
     print(final_list)
@@ -198,6 +153,7 @@ def get_detailed_listing_database(html_file):
         placetype=listing_information[1]
         bedrooms=listing_information[2]
         lst.append((listing_title, listing_cost, listing_id, policy_num, placetype, bedrooms))
+    print(lst)
     return lst
 
 
@@ -255,7 +211,7 @@ def check_policy_numbers(data):
     tups_checked=[]
     for tup in data:
         policy_num=tup[3]
-        reg_ex= r'(20\d{2}\-00\d{4}STR)|(STR-000\d{4})'
+        reg_ex= r'(20\d{2}-00\d{4}STR)|(STR-000\d{4})'
         results=re.search(reg_ex, tup)
         if policy_num not in results:
             tups_checked.append(tup)
@@ -301,7 +257,8 @@ class TestCases(unittest.TestCase):
                      "1944564",
                      "1550913",
                      "4616596",
-                     "6600081"]
+                     "6600081",
+                     "28668414"]
         # call get_listing_information for i in html_list:
         listing_informations = [get_listing_information(id) for id in html_list]
         # check that the number of listing information is correct (5)
