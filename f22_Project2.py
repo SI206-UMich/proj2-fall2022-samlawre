@@ -97,7 +97,7 @@ def get_listing_information(listing_id):
     policy_num= soup.find('li', class_= "f19phm7j dir dir-ltr")
     policy= policy_num.find('span', class_='ll4r2nl dir dir-ltr')
     policy_new.append(policy.text)
-    print(policy_new)
+    # print(policy_new)
    
     place=[]
     place_type=soup.find('div', class_="_cv5qq4")
@@ -108,36 +108,68 @@ def get_listing_information(listing_id):
         place.append("Shared Room")
     else:
         place.append("Entire Room")
+    
+    bed_number=[]
+    # print(place)
+    beds=soup.find_all("li", class_="l7n4lsf dir dir-ltr")[1]
+    span=beds.find_all('span')[2]
+    for number in span:
+        # print(number)
+        bed_number.append(int(number[0]))
+    # print(bed_number)
+    # print(span)
+    # num_bedrooms=0
+    # beds=soup.find_all('ol', class_="lgx66tx dir dir-ltr")
+    # bed_info=beds.text
+    # updates=re.findall("\. (\S bedroom|studio|Studio)", bed_info)
+    # for info in updates:
+    #     if info[0]=="S":
+    #         num_bedrooms=1
+    #     else:
+    #         num_bedrooms=int(info[0])
+    # span=beds.find_all('span', beds)
+    # print(num_bedrooms)
+    # for nums in beds:
 
-    print(place)
-
-    bedrooms=0
-    # beds=soup.find('li', class_="l7n4lsf dir dir-ltr")
-
-    beds=soup.find('span', class_="s1b4clln dir dir-ltr")
-    print(beds) #not right
-    bed_info=beds[1].text.split()
-    if bed_info[1]=='Studio':
-        bedrooms=1
-    else:
-        bedrooms=int(bed_info[1])
-    print(bedrooms)
-
+    #         bedrooms.append(nums)
+    # print(bedrooms)
+    # print(bedrooms)
+    # # nums=beds.find('li', class_="pen26si dir dir-ltr")
+    # for items in beds:
+    #     items.text
+    #     print(items)
+    
+    # for items in beds:
+    #     pattern=r'(\d+?) bedroom'
+    #     x=re.search(pattern, items)
+    #     if x in items:
+    #         bedrooms.append(x)
+    # print(beds)
+   #previous version------------------------------------------
+    # beds=soup.find('span', class_="s1b4clln dir dir-ltr")
+    # print(beds) #not right
+    # bed_info=beds[1].text.split()
+    # if bed_info[1]=='Studio':
+    #     bedrooms=1
+    # else:
+    #     bedrooms=int(bed_info[1])
+    # print(bedrooms)
+    #---------------------------------------------------------
 
     # pattern=r'\d+?\sbed?\w+'
     # beds=soup.find(re.compile(pattern))
     # if re.search(pattern, beds):
     #     bedrooms.append(beds)
-    print(bedrooms)
+    # print(bedrooms)
     # bed_nums=soup.find(span)
     # print(bedrooms)
 #fix this function
 
-    # final_list=[]
-    # for idx in range(len(policy_new)):
-    #     final_list.append((policy_new[idx], place[idx], bedrooms[idx]))
-    # # print(final_list)
-    # return final_list
+    # final_list=(policy_new, place, bed_number)
+    for idx in range(len(policy_new)):
+        final_list=((policy_new[idx], place[idx], bed_number[idx]))
+    print(final_list)
+    return final_list
 
 
 def get_detailed_listing_database(html_file):
