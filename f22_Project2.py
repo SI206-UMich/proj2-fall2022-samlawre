@@ -123,7 +123,7 @@ def get_listing_information(listing_id):
 
     for idx in range(len(policy_new)):
         final_list=((policy_new[idx], place[idx], bed_number[idx]))
-    print(final_list)
+    # print(final_list)
     return final_list
 
 
@@ -153,7 +153,7 @@ def get_detailed_listing_database(html_file):
         placetype=listing_information[1]
         bedrooms=listing_information[2]
         lst.append((listing_title, listing_cost, listing_id, policy_num, placetype, bedrooms))
-    print(lst)
+    # print(lst)
     return lst
 
 
@@ -211,8 +211,9 @@ def check_policy_numbers(data):
     tups_checked=[]
     for tup in data:
         policy_num=tup[3]
+        # print(policy_num)
         reg_ex= r'(20\d{2}-00\d{4}STR)|(STR-000\d{4})'
-        results=re.search(reg_ex, tup)
+        results=re.findall(reg_ex, policy_num)
         if policy_num not in results:
             tups_checked.append(tup)
     return tups_checked
@@ -257,8 +258,7 @@ class TestCases(unittest.TestCase):
                      "1944564",
                      "1550913",
                      "4616596",
-                     "6600081",
-                     "28668414"]
+                     "6600081"]
         # call get_listing_information for i in html_list:
         listing_informations = [get_listing_information(id) for id in html_list]
         # check that the number of listing information is correct (5)
