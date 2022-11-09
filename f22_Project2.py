@@ -224,11 +224,11 @@ def check_policy_numbers(data):
     tups_checked=[]
     for tup in data:
         policy_num=tup[3]
-        # print(policy_num)
-        reg_ex= r'(20\d{2}-00\d{4}STR)|(STR-000\d{4})'
+        reg_ex= r'(20\d{2}-00\d{4}STR)|(STR-000\d{4})|(Exempt)|(Pending)'
         results=re.findall(reg_ex, policy_num)
-        if policy_num not in results:
-            tups_checked.append(tup)
+        if not results:
+            tups_checked.append(tup[2])
+    # print(tups_checked)
     return tups_checked
     
 
@@ -346,12 +346,11 @@ class TestCases(unittest.TestCase):
         # check that the return value is a list
         self.assertEqual(type(invalid_listings), list)
         # check that there is exactly one element in the string
-        #fix--------------------------------------------
-        # self.assertEqual(len(invalid_listings),1)
+        self.assertEqual(len(invalid_listings),1)
         # check that the element in the list is a string
-
+        self.assertEqual(type(invalid_listings[0]),str)
         # check that the first element in the list is '16204265'
-        pass
+        self.assertEqual(invalid_listings[0],'16204265')
 
 
 if __name__ == '__main__':
