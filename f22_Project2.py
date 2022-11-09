@@ -94,10 +94,23 @@ def get_listing_information(listing_id):
     soup = BeautifulSoup(f, 'html.parser')
 
     policy_new=[]
+    final_policy=[]
     policy_num= soup.find('li', class_= "f19phm7j dir dir-ltr")
     policy= policy_num.find('span', class_='ll4r2nl dir dir-ltr')
+    # if policy.text=='pending':
+    #     policy_new.append("Pending")
     policy_new.append(policy.text)
-    # print(policy_new)
+    for policy in policy_new:
+        if policy=='pending':
+            final_policy.append("Pending")
+        elif "pending" in policy.lower():
+            new="Pending"
+            final_policy.append(new)
+        elif policy[0]=="L":
+            final_policy.append("Exempt")
+        else:
+            final_policy.append(policy)
+    # print(final_policy)
    
     place=[]
     place_type=soup.find('div', class_="_cv5qq4")
@@ -121,8 +134,8 @@ def get_listing_information(listing_id):
     # print(bed_number)
     # print(span)
 
-    for idx in range(len(policy_new)):
-        final_list=((policy_new[idx], place[idx], bed_number[idx]))
+    for idx in range(len(final_policy)):
+        final_list=((final_policy[idx], place[idx], bed_number[idx]))
     # print(final_list)
     return final_list
 
@@ -316,12 +329,13 @@ class TestCases(unittest.TestCase):
         # check that there are 21 lines in the csv
         self.assertEqual(len(csv_lines), 21)
         # check that the header row is correct
-
+        self.assertEqual(csv_lines[0],["Listing Title","Cost","Listing ID","Policy Number","Place Type","Number of Bedrooms"])
         # check that the next row is Private room in Mission District,82,51027324,Pending,Private Room,1
-
+        self.assertEqual(csv_lines[1],['Private room in Mission District',"82",'51027324','Pending','Private Room',"1"])
         # check that the last row is Apartment in Mission District,399,28668414,Pending,Entire Room,2
-
-        pass
+        self.assertEqual(csv_lines[-1],['Apartment in Mission District','399','28668414','Pending','Entire Room','2'])
+        
+        
 
     def test_check_policy_numbers(self):
         # call get_detailed_listing_database on "html_files/mission_district_search_results.html"
@@ -332,7 +346,8 @@ class TestCases(unittest.TestCase):
         # check that the return value is a list
         self.assertEqual(type(invalid_listings), list)
         # check that there is exactly one element in the string
-
+        #fix--------------------------------------------
+        # self.assertEqual(len(invalid_listings),1)
         # check that the element in the list is a string
 
         # check that the first element in the list is '16204265'
